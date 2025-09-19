@@ -22,16 +22,25 @@ public class MainActivity extends AppCompatActivity {
     Button send;
 
     private static final int SMS_PERMISSION_CODE = 100;
+    private static final int CONTACTS_PERMISSION_CODE = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        loadContacts();
+        getContacts();
 
         send = findViewById(R.id.button);
 //        phonenumber = findViewById(R.id.editText);
         message = findViewById(R.id.editText2);
+
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.READ_CONTACTS}, CONTACTS_PERMISSION_CODE);
+        } else {
+            getContacts();
+        }
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void loadContacts() {
+    private void getContacts() {
         ListView listView = findViewById(R.id.contactListView);
 
         ArrayList<String> dummyContacts = new ArrayList<>();
@@ -91,9 +100,15 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == SMS_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission Granted. Try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "SMS Permission Granted. Try again.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "SMS Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == CONTACTS_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Contacts Permission Granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Contacts Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
