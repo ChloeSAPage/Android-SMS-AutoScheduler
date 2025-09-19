@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     EditText message;
     Button sendButton;
     Button contactButton;
+    TextView selectedContactText;
     String phoneNumber;
 
     private static final int SMS_PERMISSION_CODE = 100;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        selectedContactText = findViewById(R.id.selectedContact);
         sendButton = findViewById(R.id.sendButton);
         contactButton = findViewById(R.id.contactButton);
         message = findViewById(R.id.editText2);
@@ -55,7 +58,12 @@ public class MainActivity extends AppCompatActivity {
                 String msg = message.getText().toString().trim();
 
                 if (msg.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Please write a message", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (phoneNumber == null) {
+                    Toast.makeText(MainActivity.this, "Please select a contact", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -105,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
                     String name = cursor.getString(nameIndex);
                     phoneNumber = cursor.getString(numberIndex);
+                    selectedContactText.setText(name + ": " + phoneNumber);
                     cursor.close();
                 }
             }

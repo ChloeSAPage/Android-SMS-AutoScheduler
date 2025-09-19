@@ -12,6 +12,34 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:width="80sp"
+            android:text="Current Contact: "
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/selectedContact"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:width="80sp"
+            android:text="No contact selected"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
         android:orientation="horizontal">
 
         <TextView
