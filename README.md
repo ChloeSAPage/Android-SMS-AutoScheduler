@@ -8,3 +8,5 @@ An app to schedule SMS messages weekly
 - Schedule send can be weekly
 - Allow user to select from contacts ✅
 - Don't send if recipient has sent a message within the last week?
+- Improve UI
+- Clean up code
