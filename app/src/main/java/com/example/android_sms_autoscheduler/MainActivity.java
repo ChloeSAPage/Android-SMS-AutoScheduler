@@ -6,7 +6,9 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -68,20 +70,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getContacts() {
-        ListView listView = findViewById(R.id.contactListView);
+        try {
+            ListView listView = findViewById(R.id.contactListView);
 
-        ArrayList<String> dummyContacts = new ArrayList<>();
-        dummyContacts.add("Timmy - 12345");
-        dummyContacts.add("Timmy2 - 123456");
-        dummyContacts.add("Timmy3 - 123457");
+            ArrayList<String> contacts = new ArrayList<>();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                dummyContacts
-        );
+            Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{
+                            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                            ContactsContract.CommonDataKinds.Phone.NUMBER
+                    },
+                    null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
 
-        listView.setAdapter(adapter);
+            if (cursor != null) {
+                int nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+                int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+
+                while (cursor.moveToNext()) {
+                    String name = cursor.getString(nameIndex);
+                    String number = cursor.getString(numberIndex);
+                    contacts.add(name + "-" + number);
+                }
+                cursor.close();
+            }
+
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    contacts
+            );
+
+            listView.setAdapter(adapter);
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Failed to get contacts: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
     }
 
 
